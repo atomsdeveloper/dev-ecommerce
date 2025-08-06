@@ -14,5 +14,17 @@
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  }
+  },
+
+  // VsCode settings for better folder management
+  "window.zoomLevel": 0,
+  "breadcrumbs.enabled": true,
+  "editor.fontSize": 12.2,
+  "debug.console.fontSize": 12.2,
+  "terminal.integrated.fontSize": 12.2,
+  "editor.glyphMargin": false,
+  "workbench.activityBar.location": "default",
+  "editor.lineNumbers": "on",
+
+  "explorer.compactFolders": false
 }
