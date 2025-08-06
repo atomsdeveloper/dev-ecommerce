@@ -28,7 +28,9 @@ import { toast } from "sonner";
 
 // Auth Client
 import { authClient } from "../../../lib/auth-client";
-import { useRouter } from "next/router";
+
+// Next
+import { useRouter } from "next/navigation";
 
 // Schema of the form
 export const formSchema = z
@@ -63,6 +65,7 @@ type FormData = z.infer<typeof formSchema>;
 
 const SignUpForm = () => {
   const router = useRouter();
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -98,7 +101,7 @@ const SignUpForm = () => {
 
   return (
     <>
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Criar conta</CardTitle>
           <CardDescription>

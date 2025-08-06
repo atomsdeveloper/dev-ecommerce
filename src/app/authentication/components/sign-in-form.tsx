@@ -79,7 +79,7 @@ const SignInForm = () => {
 
   return (
     <>
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Entrar</CardTitle>
           <CardDescription>Entre na sua conta</CardDescription>
