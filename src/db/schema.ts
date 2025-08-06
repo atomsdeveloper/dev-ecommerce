@@ -1,11 +1,72 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, text, uuid, timestamp } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  text,
+  uuid,
+  timestamp,
+  boolean,
+} from "drizzle-orm/pg-core";
 
 // TABLE USERS
 export const userTable = pgTable("user", {
-  id: uuid().primaryKey().defaultRandom(),
-  name: text().notNull(),
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified")
+    .$defaultFn(() => false)
+    .notNull(),
+  image: text("image"),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
 });
+
+// TABLE SESSION
+export const sessionTable = pgTable("session", {
+  id: text("id").primaryKey(),
+  expiresAt: timestamp("expires_at").notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id, { onDelete: "cascade" }),
+});
+
+// Relations for user table to be used in queries and joins with other tables
+export const sessionRelations = relations(sessionTable, ({ many }) => ({
+  users: many(userTable),
+}));
+
+// TABLE ACCOUNT
+export const accountTable = pgTable("account", {
+  id: text("id").primaryKey(),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id, { onDelete: "cascade" }),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
+  accessTokenExpiresAt: timestamp("access_token_expires_at"),
+  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+});
+
+// Relations for user table to be used in queries and joins with other tables
+export const accountRelations = relations(accountTable, ({ many }) => ({
+  users: many(userTable),
+}));
 
 // TABLE CATEGORY
 export const categoryTable = pgTable("category", {
@@ -29,7 +90,7 @@ export const productTable = pgTable("product", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   categoryId: uuid("category_id")
     .notNull()
-    .references(() => categoryTable.id),
+    .references(() => categoryTable.id, { onDelete: "set null" }),
 });
 
 // Relations for product table to be used in queries and joins with other tables
@@ -42,11 +103,12 @@ export const productRelations = relations(productTable, ({ one, many }) => ({
   variants: many(productVariantTable), // one product can have many variants
 }));
 
+// TABLE PRODUCT VARIANT
 export const productVariantTable = pgTable("product_variant", {
   id: uuid().primaryKey().defaultRandom(),
   productId: uuid("product_id")
     .notNull()
-    .references(() => productTable.id),
+    .references(() => productTable.id, { onDelete: "cascade" }),
   name: text().notNull(),
   priceInCents: integer("price_in_cents").notNull(),
   color: text().notNull(),
