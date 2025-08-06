@@ -18,13 +18,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
+
+// Auth Client
+import { authClient } from "../../../lib/auth-client";
+import { useRouter } from "next/router";
 
 // Schema of the form
 export const formSchema = z
@@ -57,7 +61,8 @@ export const formSchema = z
 
 type FormData = z.infer<typeof formSchema>;
 
-const SingUpForm = () => {
+const SignUpForm = () => {
+  const router = useRouter();
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,9 +73,27 @@ const SingUpForm = () => {
     },
   });
 
-  function onSubmit(values: FormData) {
-    console.log("FORMULÁRIO ENVIADO DE SING UP");
-    console.log(values);
+  async function onSubmit(values: FormData) {
+    await authClient.signUp.email({
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: (error) => {
+          if (error.error.code === "user_already_exists") {
+            toast.error("Não é possível cadastrar este E-mail.");
+            form.setError("email", {
+              message: "Tente novamente com outro E-mail.",
+            });
+          }
+
+          toast.error(error.error.message || "Erro ao cadastrar usuário.");
+        },
+      },
+    });
   }
 
   return (
@@ -163,4 +186,4 @@ const SingUpForm = () => {
   );
 };
 
-export default SingUpForm;
+export default SignUpForm;

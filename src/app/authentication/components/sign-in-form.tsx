@@ -18,13 +18,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
+
+// Auth Client
+import { authClient } from "@/lib/auth-client";
+
+// Next
+import { useRouter } from "next/navigation";
 
 // Schema of the form
 export const formSchema = z.object({
@@ -38,7 +44,9 @@ export const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const SingInForm = () => {
+const SignInForm = () => {
+  const router = useRouter();
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,9 +55,26 @@ const SingInForm = () => {
     },
   });
 
-  function onSubmit(values: FormData) {
-    console.log("FORMULÁRIO ENVIADO DE SING IN");
-    console.log(values);
+  async function onSubmit(values: FormData) {
+    await authClient.signIn.email({
+      email: values.email,
+      password: values.password,
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: (ctx) => {
+          if (ctx.error.code === "INVALID_EMAIL_OR_PASSWORD") {
+            toast.error("E-mail ou senha inválidos.");
+            form.setError("email", {
+              message: "Insira os dados corretamente.",
+            });
+          }
+
+          toast.error(ctx.error.message || "Erro ao cadastrar usuário.");
+        },
+      },
+    });
   }
 
   return (
@@ -108,4 +133,4 @@ const SingInForm = () => {
   );
 };
 
-export default SingInForm;
+export default SignInForm;
