@@ -60,7 +60,7 @@ const Home = async () => {
             className="h-auto w-full"
           />
 
-          <ProductList products={newlyCreatedProducts} title="Mais vendidos" />
+          <ProductList products={newlyCreatedProducts} title="Talvez goste" />
 
           <Footer />
         </div>
