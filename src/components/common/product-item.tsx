@@ -27,7 +27,10 @@ const ProductItem = ({ product, textContainerClass }: ProducItemProps) => {
   const parsedImageUrl: string = extractUrl(firstVariant.imageUrl);
 
   return (
-    <Link href="/" className="flex flex-col gap-4">
+    <Link
+      href={`/products-variant/${firstVariant.slug}`}
+      className="flex flex-col gap-4"
+    >
       <Image
         src={parsedImageUrl as string}
         alt={firstVariant.slug}
