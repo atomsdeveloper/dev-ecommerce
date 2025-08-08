@@ -23,12 +23,11 @@ const ProductList = ({ product }: ProducItemProps) => {
   };
 
   const parsedImageUrl: string = extractUrl(firstVariant.imageUrl);
-  console.log("parseImageUrl:", parsedImageUrl);
 
   return (
     <Link href="/" className="flex flex-col gap-4">
       <Image
-        src={parsedImageUrl}
+        src={parsedImageUrl as string}
         alt={firstVariant.slug}
         height={150}
         width={150}

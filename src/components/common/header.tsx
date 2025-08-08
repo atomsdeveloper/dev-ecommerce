@@ -22,6 +22,9 @@ import { LogInIcon, LogOutIcon, MenuIcon } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 
+// Helpers
+import { capitalizeName } from "@/helpers/capitalize";
+
 const Header = () => {
   const { data: session } = authClient.useSession();
 
@@ -55,19 +58,19 @@ const Header = () => {
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage
-                      src={session.user.image || undefined}
+                      src={session.user?.image || undefined}
                       alt={session.user.name || "User Avatar"}
                     />
                     <AvatarFallback>
-                      {session.user.name?.charAt(0).toUpperCase()}
+                      {session.user.name.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
 
                   <div>
-                    <h3 className="text-sm font-semibold">
-                      {session?.user?.name}
+                    <h3 className="text-xs font-semibold">
+                      {session?.user?.name && capitalizeName(session.user.name)}
                     </h3>
-                    <span className="text-muted-foreground block text-sm">
+                    <span className="text-muted-foreground block text-xs">
                       {session?.user?.email}
                     </span>
                   </div>

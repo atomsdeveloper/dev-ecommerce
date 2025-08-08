@@ -8,7 +8,7 @@ import { db } from "../db";
 // Next
 import Image from "next/image";
 
-export default async function Home() {
+const Home = async () => {
   const products = await db.query.productTable.findMany({
     with: {
       variants: true,
@@ -46,4 +46,6 @@ export default async function Home() {
       </div>
     </>
   );
-}
+};
+
+export default Home;
