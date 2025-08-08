@@ -3,6 +3,7 @@
 // Database
 import { productTable, productVariantTable } from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
+import { cn } from "@/lib/utils";
 
 // Next
 import Image from "next/image";
@@ -12,9 +13,10 @@ interface ProducItemProps {
   product: typeof productTable.$inferSelect & {
     variants: (typeof productVariantTable.$inferSelect)[];
   };
+  textContainerClass?: string;
 }
 
-const ProductList = ({ product }: ProducItemProps) => {
+const ProductItem = ({ product, textContainerClass }: ProducItemProps) => {
   const firstVariant = product.variants[0];
 
   const extractUrl = (raw: string): string => {
@@ -25,15 +27,21 @@ const ProductList = ({ product }: ProducItemProps) => {
   const parsedImageUrl: string = extractUrl(firstVariant.imageUrl);
 
   return (
-    <Link href="/" className="flex flex-col gap-4">
+    <Link
+      href={`/products-variant/${firstVariant.slug}`}
+      className="flex flex-col gap-4"
+    >
       <Image
         src={parsedImageUrl as string}
         alt={firstVariant.slug}
-        height={150}
-        width={150}
-        className="rounded-2xl"
+        height={0}
+        width={0}
+        sizes="100vw"
+        className="h-auto w-full rounded-2xl"
       />
-      <div className="flex max-w-[150px] flex-col gap-1">
+      <div
+        className={cn("flex max-w-[150px] flex-col gap-1", textContainerClass)}
+      >
         <p className="truncate text-sm font-medium"> {product.name} </p>
         <p className="text-muted-foreground truncate text-xs font-medium">
           {product.description}
@@ -46,4 +54,4 @@ const ProductList = ({ product }: ProducItemProps) => {
   );
 };
 
-export default ProductList;
+export default ProductItem;
