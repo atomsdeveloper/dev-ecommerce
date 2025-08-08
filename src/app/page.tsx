@@ -1,4 +1,5 @@
 // Components Common
+import CategorySelector from "@/components/common/category-selector";
 import Header from "../components/common/header";
 import ProductList from "../components/common/product-list";
 
@@ -15,6 +16,8 @@ const Home = async () => {
     },
   });
 
+  const categories = await db.query.categoryTable.findMany({});
+
   return (
     <>
       <Header />
@@ -30,6 +33,8 @@ const Home = async () => {
             className="h-auto w-full"
           />
         </div>
+
+        <CategorySelector categories={categories} />
 
         <ProductList products={products} title="Mais vendidos" />
 
