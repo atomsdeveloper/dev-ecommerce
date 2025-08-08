@@ -128,3 +128,13 @@ export const productVariantRelations = relations(
     }),
   }),
 );
+
+// TABLE VERIFICATION
+export const verificationTable = pgTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("update_at").notNull().defaultNow(),
+});
