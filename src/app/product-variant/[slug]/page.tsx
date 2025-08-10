@@ -3,7 +3,7 @@ import Header from "@/components/common/header";
 
 // Database
 import { db } from "@/db";
-import { productVariantTable } from "@/db/schema";
+import { productTable, productVariantTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 // Next
@@ -11,6 +11,8 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { formatCentsToBRL } from "@/helpers/money";
 import { Button } from "@/components/ui/button";
+import ProductList from "@/components/common/product-list";
+import Footer from "@/components/common/footer";
 
 interface ProductVariantPageProps {
   params: Promise<{ slug: string }>;
@@ -30,6 +32,13 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
     return notFound();
   }
 
+  const likelyProducts = await db.query.productTable.findMany({
+    where: eq(productTable.categoryId, productVariant.product.id),
+    with: {
+      variants: true,
+    },
+  });
+
   return (
     <>
       <Header />
@@ -48,7 +57,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
         {/* VARIANTS */}
         <div>variants</div>
 
-        {/* DESCRIPTION */}
+        {/* INFORMATIONS */}
         <div>
           <div className="text-lg font-semibold">
             {productVariant.product.name}
@@ -66,13 +75,23 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
 
         {/* BUTTONS */}
         <div className="space-y-4">
-          <Button className="w-full" variant="default">
+          <Button className="w-full rounded-full" size="lg" variant="default">
             Comprar agora
           </Button>
-          <Button className="w-full" variant="ghost">
+          <Button className="w-full rounded-full" size="lg" variant="ghost">
             Adicionar à sacola
           </Button>
         </div>
+
+        {/* DESCRIPTION */}
+        <p className="text-shadow-amber-600">
+          {productVariant.product.description}{" "}
+        </p>
+
+        {/* PRODDUCTS */}
+        <ProductList title="Talvez goste" products={likelyProducts} />
+
+        <Footer />
       </div>
     </>
   );
