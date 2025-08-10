@@ -13,6 +13,7 @@ import { formatCentsToBRL } from "@/helpers/money";
 import { Button } from "@/components/ui/button";
 import ProductList from "@/components/common/product-list";
 import Footer from "@/components/common/footer";
+import VariantSelector from "@/components/common/variant-selector";
 
 interface ProductVariantPageProps {
   params: Promise<{ slug: string }>;
@@ -24,7 +25,11 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
   const productVariant = await db.query.productVariantTable.findFirst({
     where: eq(productVariantTable.slug, slug),
     with: {
-      product: true,
+      product: {
+        with: {
+          variants: true,
+        },
+      },
     },
   });
 
@@ -55,7 +60,10 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
         </div>
 
         {/* VARIANTS */}
-        <div>variants</div>
+        <VariantSelector
+          selectedVariantSlug={productVariant.slug}
+          variants={productVariant.product.variants}
+        />
 
         {/* INFORMATIONS */}
         <div>
