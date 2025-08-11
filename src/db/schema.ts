@@ -25,6 +25,12 @@ export const userTable = pgTable("user", {
     .notNull(),
 });
 
+// Relations for user table to be used in queries and joins with other tables
+export const userRelations = relations(userTable, ({ many }) => ({
+  // Table of products with relations where...
+  shippingAddress: many(shippingAddressTable), // references the shipping address table to join datas.
+}));
+
 // TABLE SESSION
 export const sessionTable = pgTable("session", {
   id: text("id").primaryKey(),
@@ -76,7 +82,7 @@ export const categoryTable = pgTable("category", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-// Relations for user table to be used in queries and joins with other tables
+// Relations for category table to be used in queries and joins with other tables
 export const categoryRelations = relations(categoryTable, ({ many }) => ({
   products: many(productTable),
 }));
@@ -117,11 +123,11 @@ export const productVariantTable = pgTable("product_variant", {
   slug: text().notNull().unique(),
 });
 
-// Relations for product table to be used in queries and joins with other tables
+// Relations for product variant table to be used in queries and joins with other tables
 export const productVariantRelations = relations(
   productVariantTable,
   ({ one }) => ({
-    // Table of products with relations where...
+    // Table of products variants with relations where...
     product: one(productTable, {
       fields: [productVariantTable.productId], // field `productId`
       references: [productTable.id], // references the `id` field of the `productTable`
@@ -138,3 +144,36 @@ export const verificationTable = pgTable("verification", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("update_at").notNull().defaultNow(),
 });
+
+// TABLE ADDRESS
+export const shippingAddressTable = pgTable("shipping_address", {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id, { onDelete: "cascade" }),
+  recipientName: text().notNull(),
+  street: text().notNull(),
+  number: text().notNull(),
+  complement: text().notNull(),
+  city: text().notNull(),
+  state: text().notNull(),
+  neighborhood: text().notNull(),
+  zipCode: text().notNull(),
+  country: text().notNull(),
+  phone: text().notNull(),
+  email: text().notNull(),
+  cpfOrCnpj: text().notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Relations for product table to be used in queries and joins with other tables
+export const shippingAddressRelations = relations(
+  shippingAddressTable,
+  ({ one }) => ({
+    // Table of products with relations where...
+    user: one(userTable, {
+      fields: [shippingAddressTable.userId], // field `userId`
+      references: [userTable.id], // references the `id` field of the `userTable`
+    }),
+  }),
+);
