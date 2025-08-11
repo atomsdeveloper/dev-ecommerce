@@ -1,5 +1,8 @@
 // Components Common
 import Header from "@/components/common/header";
+import ProductList from "@/components/common/product-list";
+import Footer from "@/components/common/footer";
+import VariantSelector from "@/components/common/variant-selector";
 
 // Database
 import { db } from "@/db";
@@ -9,11 +12,12 @@ import { eq } from "drizzle-orm";
 // Next
 import { notFound } from "next/navigation";
 import Image from "next/image";
+
+// Helpers
 import { formatCentsToBRL } from "@/helpers/money";
+
+// UI Componets
 import { Button } from "@/components/ui/button";
-import ProductList from "@/components/common/product-list";
-import Footer from "@/components/common/footer";
-import VariantSelector from "@/components/common/variant-selector";
 
 interface ProductVariantPageProps {
   params: Promise<{ slug: string }>;

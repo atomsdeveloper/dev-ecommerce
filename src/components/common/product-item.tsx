@@ -2,7 +2,11 @@
 
 // Database
 import { productTable, productVariantTable } from "@/db/schema";
+
+// Helpers
 import { formatCentsToBRL } from "@/helpers/money";
+
+// Utils
 import { cn } from "@/lib/utils";
 
 // Next

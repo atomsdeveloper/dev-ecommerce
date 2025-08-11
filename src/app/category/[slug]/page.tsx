@@ -1,9 +1,13 @@
+// Components Common
 import Header from "@/components/common/header";
 import ProductItem from "@/components/common/product-item";
-import ProductList from "@/components/common/product-list";
+
+// Database
 import { db } from "@/db";
 import { categoryTable, productTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
+
+// Next
 import { notFound } from "next/navigation";
 
 interface CategoryPageProps {

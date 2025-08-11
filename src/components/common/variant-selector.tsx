@@ -1,5 +1,7 @@
+// Database
 import { productVariantTable } from "@/db/schema";
 
+// Next
 import Image from "next/image";
 import Link from "next/link";
 

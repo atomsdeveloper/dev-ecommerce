@@ -1,4 +1,7 @@
+// Icons
 import { Sheet, ShoppingBasketIcon } from "lucide-react";
+
+// UI Components
 import { SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 

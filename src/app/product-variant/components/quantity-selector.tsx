@@ -1,7 +1,12 @@
 "use client";
 
+// UI Components
 import { Button } from "@/components/ui/button";
+
+// Icons
 import { MinusIcon, PlusIcon } from "lucide-react";
+
+// React
 import { useState } from "react";
 
 const QuantitySelector = () => {
