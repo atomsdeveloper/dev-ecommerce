@@ -42,7 +42,9 @@ const Home = async () => {
             sizes="100vw"
             className="h-auto w-full"
           />
+        </div>
 
+        <div className="px-5">
           <CategorySelector categories={categories} />
         </div>
 
