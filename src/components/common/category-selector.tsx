@@ -11,7 +11,7 @@ const CategorySelector = ({ categories }: CategorySelectorProps) => {
     <div className="rounded-3xl bg-white p-6">
       <div className="grid grid-cols-2 gap-3">
         {categories.map((category) => (
-          <Link href={`/category/${category.slug}`}>
+          <Link href={`/category/${category.slug}`} key={category.id}>
             <Button
               asChild
               key={category.id}
