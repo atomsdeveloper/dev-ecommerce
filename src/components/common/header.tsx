@@ -24,6 +24,7 @@ import { toast } from "sonner";
 
 // Helpers
 import { capitalizeName } from "@/helpers/capitalize";
+import Cart from "./cart";
 
 const Header = () => {
   const { data: session } = authClient.useSession();
@@ -100,6 +101,7 @@ const Header = () => {
           </div>
         </SheetContent>
       </Sheet>
+      <Cart />
     </header>
   );
 };
