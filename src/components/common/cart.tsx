@@ -1,8 +1,14 @@
 // Icons
-import { Sheet, ShoppingBasketIcon } from "lucide-react";
+import { ShoppingBasketIcon } from "lucide-react";
 
 // UI Components
-import { SheetTrigger } from "../ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 import { Button } from "../ui/button";
 
 const Cart = () => {
@@ -13,6 +19,11 @@ const Cart = () => {
           <ShoppingBasketIcon />
         </Button>
       </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Sacola</SheetTitle>
+        </SheetHeader>
+      </SheetContent>
     </Sheet>
   );
 };
