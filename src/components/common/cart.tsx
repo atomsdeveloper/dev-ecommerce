@@ -10,16 +10,23 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
+import { Separator } from "@radix-ui/react-separator";
+import { ScrollArea } from "../ui/scroll-area";
 
 // Query
 import { useQuery } from "@tanstack/react-query";
 
 // Actions
 import { getCart } from "@/actions/get-cart";
+
+// Components Common
 import CartItem from "./cart-item";
-import { ScrollArea } from "../ui/scroll-area";
-import { Separator } from "@radix-ui/react-separator";
+
+// Helpers
 import { formatCentsToBRL } from "@/helpers/money";
+
+// Next
+import Link from "next/link";
 
 const Cart = () => {
   // Query for fetch datas in database in client side.
@@ -50,19 +57,30 @@ const Cart = () => {
           <div className="flex h-full max-h-full flex-col overflow-hidden">
             <ScrollArea className="h-full">
               <div className="flex h-full flex-col gap-8">
-                {cart?.items?.map((item) => (
-                  <CartItem
-                    key={item.id}
-                    id={item.id}
-                    productName={item.productVariant.name}
-                    productVariantImageUrl={item.productVariant.imageUrl}
-                    productVariantName={item.productVariant.name}
-                    productVariantPriceInCents={
-                      item.productVariant.priceInCents
-                    }
-                    quantity={item.quantity}
-                  />
-                ))}
+                {cart?.items?.map((item) => {
+                  const extractUrl = (raw: string): string => {
+                    const match = raw.match(/https?:\/\/[^"}]+/);
+                    return match ? match[0] : "";
+                  };
+
+                  const parsedImageUrl: string = extractUrl(
+                    item.productVariant.imageUrl,
+                  );
+
+                  return (
+                    <CartItem
+                      key={item.id}
+                      id={item.id}
+                      productName={item.productVariant.name}
+                      productVariantImageUrl={parsedImageUrl}
+                      productVariantName={item.productVariant.name}
+                      productVariantPriceInCents={
+                        item.productVariant.priceInCents
+                      }
+                      quantity={item.quantity}
+                    />
+                  );
+                })}
               </div>
             </ScrollArea>
           </div>
@@ -71,23 +89,29 @@ const Cart = () => {
             <div className="flex flex-col gap-1">
               <Separator />
               <div className="flex items-center justify-between text-xs font-medium">
-                <p>subtotal</p>
+                <p>Subtotal</p>
                 <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
               </div>
               <Separator />
               <div className="flex items-center justify-between text-xs font-medium">
-                <p>entrega</p>
+                <p>Taxa</p>
                 <p className="text-md font-semibold text-green-500">
                   {formatCentsToBRL(cart?.deleveryFees)}
                 </p>
               </div>
               <Separator />
               <div className="flex items-center justify-between text-xs font-medium">
-                <p>total</p>
-                <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
+                <p>Total</p>
+                <p>
+                  {formatCentsToBRL(
+                    (cart?.totalPriceInCents ?? 0) + (cart?.deleveryFees ?? 0),
+                  )}
+                </p>
               </div>
 
-              <Button>Finalizar compra</Button>
+              <Button asChild className="mt-5 rounded-full">
+                <Link href="cart/identification">Finalizar compra</Link>
+              </Button>
             </div>
           )}
         </div>

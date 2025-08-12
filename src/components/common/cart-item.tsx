@@ -11,14 +11,15 @@ import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { formatCentsToBRL } from "@/helpers/money";
 
 // Query
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 // Actions
 import { removeCartProduct } from "@/actions/remove-cart-product";
+import { increaseCartProduct } from "@/actions/increase-cart-product";
+import { decreaseCartProduct } from "@/actions/decrease-cart-product";
 
 // Toast
 import { toast } from "sonner";
-import { increaseCartProduct } from "@/actions/increase-cart-product";
 
 interface CartItemProps {
   id: string;
@@ -37,7 +38,7 @@ const CartItem = ({
   productVariantPriceInCents,
   quantity,
 }: CartItemProps) => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   // REMOVE
   const removeProductCart = useMutation({
@@ -60,16 +61,16 @@ const CartItem = ({
   };
 
   // DECREASE
-  const decreaseCartProduct = useMutation({
-    mutationKey: ["removeProductCart"],
-    mutationFn: () => decreaseProductCart({ cartItemId: id }),
+  const decreaseProductCart = useMutation({
+    mutationKey: ["decreaseProductCart"],
+    mutationFn: () => decreaseCartProduct({ cartItemId: id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
   });
 
   const handleDecreaseProductCart = () => {
-    decreaseCartProduct.mutate(undefined, {
+    decreaseProductCart.mutate(undefined, {
       onError: () => {
         toast.error("Erro ao diminuir a quantidade do produto na sacola.");
       },
@@ -78,7 +79,7 @@ const CartItem = ({
 
   // INCREASE
   const increaseProductCart = useMutation({
-    mutationKey: ["removeProductCart"],
+    mutationKey: ["incriseProductCart"],
     mutationFn: () => increaseCartProduct({ cartItemId: id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
@@ -104,31 +105,33 @@ const CartItem = ({
           className="rounded-lg"
         />
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <p className="text-sm font-semibold"> {productName} </p>
           <p className="text-muted-foreground text-xs font-medium">
             {productVariantName}
           </p>
-          <div className="flex w-[100px] items-center justify-between rounded-lg border p-1">
+          <div className="m-0 flex w-[100px] items-center justify-start gap-2 rounded-lg p-0">
             <Button
               size="icon"
               variant="ghost"
               onClick={handleDecreaseProductCart}
+              className="h-6 w-6 border"
             >
-              <MinusIcon />
+              <MinusIcon className="p-1" />
             </Button>
             <p>{quantity}</p>
             <Button
               size="icon"
               variant="ghost"
               onClick={handleIncreaseProductCart}
+              className="h-6 w-6 border"
             >
-              <PlusIcon />
+              <PlusIcon className="p-1" />
             </Button>
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-end justify-center gap-1">
+      <div className="flex flex-col items-end justify-center gap-4">
         <Button variant="outline" size="icon" onClick={handleRemoveProductCart}>
           <TrashIcon />
         </Button>
@@ -141,6 +144,3 @@ const CartItem = ({
 };
 
 export default CartItem;
-function decreaseProductCart(arg0: { cartItemId: string }): Promise<unknown> {
-  throw new Error("Function not implemented.");
-}
