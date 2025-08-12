@@ -48,29 +48,38 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
     },
   });
 
+  const extractUrl = (raw: string): string => {
+    const match = raw.match(/https?:\/\/[^"}]+/);
+    return match ? match[0] : "";
+  };
+
+  const parsedImageUrl: string = extractUrl(productVariant.imageUrl);
+
   return (
     <>
       <Header />
 
-      <div className="flex flex-col space-y-6 px-5">
+      <div className="flex flex-col space-y-6">
         {/* IMAGE */}
-        <div className="h-[300px] w-full">
+        <div className="relative h-[300px] w-full">
           <Image
-            src={productVariant.imageUrl}
+            src={parsedImageUrl as string}
             alt={productVariant.name}
             fill
-            className="rounded-full object-cover"
+            className="h-full object-contain"
           />
         </div>
 
         {/* VARIANTS */}
-        <VariantSelector
-          selectedVariantSlug={productVariant.slug}
-          variants={productVariant.product.variants}
-        />
+        <div className="px-5">
+          <VariantSelector
+            selectedVariantSlug={productVariant.slug}
+            variants={productVariant.product.variants}
+          />
+        </div>
 
         {/* INFORMATIONS */}
-        <div>
+        <div className="px-5">
           <div className="text-lg font-semibold">
             {productVariant.product.name}
           </div>
@@ -89,7 +98,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
 
         {/* DESCRIPTION */}
         <p className="text-shadow-amber-600">
-          {productVariant.product.description}{" "}
+          {productVariant.product.description}
         </p>
 
         {/* PRODDUCTS */}

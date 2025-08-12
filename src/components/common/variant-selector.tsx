@@ -16,21 +16,30 @@ const VariantSelector = ({
 }: VariantSelectorProps) => {
   return (
     <div className="flex items-center gap-4">
-      {variants.map((variant) => (
-        <Link href={`product-variant/${variant.slug}`} key={variant.id}>
-          <Image
-            src={variant.imageUrl}
-            width={68}
-            height={68}
-            alt={variant.name}
-            className={
-              variant.slug === selectedVariantSlug
-                ? "boder border-radius-lg rounded-lg transition"
-                : ""
-            }
-          />
-        </Link>
-      ))}
+      {variants.map((variant) => {
+        const extractUrl = (raw: string): string => {
+          const match = raw.match(/https?:\/\/[^"}]+/);
+          return match ? match[0] : "";
+        };
+
+        const parsedImageUrl: string = extractUrl(variant.imageUrl);
+
+        return (
+          <Link href={`product-variant/${variant.slug}`} key={variant.id}>
+            <Image
+              src={parsedImageUrl as string}
+              width={68}
+              height={68}
+              alt={variant.name}
+              className={
+                variant.slug === selectedVariantSlug
+                  ? "boder border-radius-lg rounded-lg transition"
+                  : ""
+              }
+            />
+          </Link>
+        );
+      })}
     </div>
   );
 };
