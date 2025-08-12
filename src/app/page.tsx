@@ -1,5 +1,5 @@
 // Components Common
-import CategorySelector from "@/components/common/category-selector";
+import CategorySelector from "../components/common/category-selector";
 import Header from "../components/common/header";
 import ProductList from "../components/common/product-list";
 import Footer from "@/components/common/footer";

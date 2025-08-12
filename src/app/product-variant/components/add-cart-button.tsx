@@ -7,7 +7,7 @@ import { addProductToCart } from "@/actions/add-cart-product";
 import { Button } from "@/components/ui/button";
 
 // Query
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 // Icons
 import { LoaderCircleIcon } from "lucide-react";
@@ -18,7 +18,7 @@ interface AddCartButtonProps {
 }
 
 const AddCartButton = ({ productVariantId, quantity }: AddCartButtonProps) => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   // Query for change database datas in client side.
   const { mutate, isPending: AddCartButtonIsLoading } = useMutation({

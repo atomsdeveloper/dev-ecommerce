@@ -32,7 +32,7 @@ const Header = () => {
   const { data: session } = authClient.useSession();
 
   return (
-    <header className="flex items-center justify-between p-4">
+    <header className="flex items-center justify-between gap-4 p-4">
       <Sheet>
         <div className="flex w-full justify-between">
           <Link href="/">

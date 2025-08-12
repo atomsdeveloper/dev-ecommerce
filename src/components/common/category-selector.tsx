@@ -1,6 +1,11 @@
+// Database
 import { categoryTable } from "@/db/schema";
+
+// UI Components
 import { Button } from "../ui/button";
-import { Link } from "lucide-react";
+
+// Next
+import Link from "next/link";
 
 interface CategorySelectorProps {
   categories: (typeof categoryTable.$inferSelect)[];
@@ -11,14 +16,17 @@ const CategorySelector = ({ categories }: CategorySelectorProps) => {
     <div className="rounded-3xl bg-white p-6">
       <div className="grid grid-cols-2 gap-3">
         {categories.map((category) => (
-          <Link href={`/category/${category.slug}`} key={category.id}>
+          <Link
+            href={`/category/${category.slug}`}
+            key={category.id}
+            className="flex items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-600"
+          >
             <Button
               asChild
-              key={category.id}
               variant="ghost"
-              className="rounded-full bg-white text-xs font-semibold"
+              className="rounded-full text-xs font-semibold"
             >
-              {category.name}
+              <p>{category.name}</p>
             </Button>
           </Link>
         ))}
