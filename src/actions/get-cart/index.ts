@@ -40,6 +40,8 @@ export const getCart = async () => {
     },
   });
 
+  const deleveryFees: number = 989;
+
   // If not cart found create one to user logged-in user and return it with empty items.
   if (!cart) {
     const [newCart] = await db
@@ -50,8 +52,16 @@ export const getCart = async () => {
     return {
       ...newCart,
       items: [],
+      totalPriceInCents: 0,
+      deleveryFees,
     };
   }
 
-  return cart;
+  return {
+    ...cart,
+    totalPriceInCents: cart?.items.reduce((acc, item) => {
+      return acc + item.quantity * item.productVariant.priceInCents;
+    }, deleveryFees),
+    deleveryFees,
+  };
 };
