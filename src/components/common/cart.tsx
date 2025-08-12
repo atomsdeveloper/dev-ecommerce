@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCart } from "@/actions/get-cart";
 
 const Cart = () => {
+  // Query for fetch datas in database in client side.
   const { data: cart, isPending: cartIsLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: () => getCart(),
