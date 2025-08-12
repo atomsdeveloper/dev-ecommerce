@@ -32,7 +32,7 @@ const ProductItem = ({ product, textContainerClass }: ProducItemProps) => {
 
   return (
     <Link
-      href={`/products-variant/${firstVariant.slug}`}
+      href={`/product-variant/${firstVariant.slug}`}
       className="flex flex-col gap-4"
     >
       <Image
