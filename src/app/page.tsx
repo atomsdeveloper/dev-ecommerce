@@ -2,6 +2,7 @@
 import CategorySelector from "@/components/common/category-selector";
 import Header from "../components/common/header";
 import ProductList from "../components/common/product-list";
+import Footer from "@/components/common/footer";
 
 // Database
 import { db } from "../db";
@@ -10,7 +11,6 @@ import { productTable } from "@/db/schema";
 
 // Next
 import Image from "next/image";
-import Footer from "@/components/common/footer";
 
 const Home = async () => {
   const products = await db.query.productTable.findMany({
