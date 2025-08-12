@@ -1,3 +1,5 @@
+"use server";
+
 // Auth
 import { auth } from "@/lib/auth";
 
@@ -13,10 +15,10 @@ import { cartItemTable, cartTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const addProductToCart = async (data: AddProductToCartSchema) => {
-  // Validade datas types.
+  // Validade datas types with zod.
   addProductToCartSchema.parse(data);
 
-  // Get User session
+  // Get user session
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -25,7 +27,7 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
     throw new Error("Unauthorized");
   }
 
-  // Check Product add to Cart exists
+  // Check if products selected exists in database.
   const productVariant = await db.query.productVariantTable.findFirst({
     where: (productVariant, { eq }) =>
       eq(productVariant.id, data.productVariantId),
@@ -35,12 +37,12 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
     throw new Error("Product Variant Not Found.");
   }
 
-  // Get Cart
+  // Get cart in agreement with user logged.
   const cart = await db.query.cartTable.findFirst({
     where: (cart, { eq }) => eq(cart.userId, session.user.id),
   });
 
-  // Created Cart if not exists
+  // Created cart if the same not exists.
   let cartId = cart?.id;
   if (!cart) {
     const [newCart] = await db
@@ -51,17 +53,18 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
     cartId = newCart.id;
   }
 
-  // Get Product of Cart
   if (!cartId) {
     throw new Error("Cart ID is undefined.");
   }
+
+  // Check if the cart already has the product.
   const cartItem = await db.query.cartItemTable.findFirst({
     where: (cartItem, { eq }) =>
       eq(cartItem.cartId, cartId) &&
       eq(cartItem.productVariantId, data.productVariantId),
   });
 
-  // If exists product set quantity in Cart.
+  // If already has product increment your quantity.
   if (cartItem) {
     await db
       .update(cartItemTable)
@@ -73,7 +76,7 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
     return;
   }
 
-  // Else insert product in Cart.
+  // If not already has product added in cart.
   await db.insert(cartItemTable).values({
     cartId,
     productVariantId: data.productVariantId,

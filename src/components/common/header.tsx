@@ -24,6 +24,8 @@ import { toast } from "sonner";
 
 // Helpers
 import { capitalizeName } from "@/helpers/capitalize";
+
+// Components Common
 import Cart from "./cart";
 
 const Header = () => {
