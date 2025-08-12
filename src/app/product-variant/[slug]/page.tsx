@@ -17,7 +17,7 @@ import Image from "next/image";
 import { formatCentsToBRL } from "@/helpers/money";
 
 // UI Componets
-import { Button } from "@/components/ui/button";
+import ProductActions from "../components/product-actions";
 
 interface ProductVariantPageProps {
   params: Promise<{ slug: string }>;
@@ -42,7 +42,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
   }
 
   const likelyProducts = await db.query.productTable.findMany({
-    where: eq(productTable.categoryId, productVariant.product.id),
+    where: eq(productTable.categoryId, productVariant.product.categoryId),
     with: {
       variants: true,
     },
@@ -82,17 +82,9 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
           </h3>
         </div>
 
-        {/* QUANTITY */}
-        <div className=""></div>
-
-        {/* BUTTONS */}
-        <div className="space-y-4">
-          <Button className="w-full rounded-full" size="lg" variant="default">
-            Comprar agora
-          </Button>
-          <Button className="w-full rounded-full" size="lg" variant="ghost">
-            Adicionar à sacola
-          </Button>
+        {/* PRODUCT ACTIONS */}
+        <div className="px-5">
+          <ProductActions productVariantId={productVariant.id} />
         </div>
 
         {/* DESCRIPTION */}
