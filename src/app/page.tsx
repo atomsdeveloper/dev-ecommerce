@@ -2,12 +2,12 @@
 import CategorySelector from "../components/common/category-selector";
 import Header from "../components/common/header";
 import ProductList from "../components/common/product-list";
-import Footer from "@/components/common/footer";
+import Footer from "../components/common/footer";
 
 // Database
 import { db } from "../db";
 import { desc } from "drizzle-orm";
-import { productTable } from "@/db/schema";
+import { productTable } from "../db/schema";
 
 // Next
 import Image from "next/image";

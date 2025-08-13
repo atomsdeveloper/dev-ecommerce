@@ -3,7 +3,7 @@
 // Auth
 import { auth } from "@/lib/auth";
 
-// Schema
+// Types Schema
 import { increaseCartProductSchema, IncreaseCartProductSchema } from "./schema";
 
 // Headers URL
