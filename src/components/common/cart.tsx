@@ -110,7 +110,7 @@ const Cart = () => {
               </div>
 
               <Button asChild className="mt-5 rounded-full">
-                <Link href="cart/identification">Finalizar compra</Link>
+                <Link href="/cart/identification">Finalizar compra</Link>
               </Button>
             </div>
           )}
