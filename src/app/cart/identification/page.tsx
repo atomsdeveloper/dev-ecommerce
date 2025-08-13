@@ -1,20 +1,21 @@
 // Compoenents Common
 import Header from "@/components/common/header";
+import Footer from "../../../components/common/footer";
 
 // Components private
 import Addresses from "./components/addresses";
 
 // Database
-import { db } from "@/db";
+import { db } from "../../../db";
+import { cartTable, shippingAddressTable } from "../../../db/schema";
+import { eq } from "drizzle-orm";
 
 // Auth
-import { auth } from "@/lib/auth";
+import { auth } from "../../../lib/auth";
 
 // Next
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
-import { shippingAddressTable } from "@/db/schema";
 
 const IdentificationPage = async () => {
   // Get user session
@@ -28,7 +29,7 @@ const IdentificationPage = async () => {
 
   // Get cart in agreement with user logged.
   const cart = await db.query.cartTable.findFirst({
-    where: (cartItem, { eq }) => eq(cartItem.id, session.user.id),
+    where: (cartItem, { eq }) => eq(cartItem.userId, session.user.id),
     with: {
       items: true,
     },
@@ -38,15 +39,35 @@ const IdentificationPage = async () => {
     redirect("/");
   }
 
-  // Busca todos os endereços do usuário
+  // Fetch data cart user logged.
+  const [cartAddress] = await db
+    .select()
+    .from(cartTable)
+    .where(eq(cartTable.userId, session.user.id));
+
+  if (!cartAddress.shippingAddressId) {
+    redirect("/");
+  }
+
+  // Fetch data all address of user logged.
   const addressUser = await db.query.shippingAddressTable.findMany({
     where: eq(shippingAddressTable.userId, session.user.id),
   });
 
   return (
-    <div>
+    <div className="h-full">
       <Header />
-      <Addresses addressUser={addressUser} />
+
+      <div className="px-5">
+        <Addresses
+          addressUser={addressUser}
+          currentAddressId={cartAddress.shippingAddressId}
+        />
+      </div>
+
+      <div className="px-5"></div>
+
+      <Footer />
     </div>
   );
 };

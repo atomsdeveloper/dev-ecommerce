@@ -1,15 +1,19 @@
 "use server";
 
+// Auth
 import { auth } from "@/lib/auth";
 
+// Database
 import { db } from "@/db";
-
-import { addShippingAddressSchema } from "./schema";
-
-import { headers } from "next/headers";
 import { shippingAddressTable } from "@/db/schema";
 
-export const addShippingAddress = async (data: unknown) => {
+// Types Schemas
+import { addShippingAddressSchema, AddShippingAddressSchema } from "./schema";
+
+// Next
+import { headers } from "next/headers";
+
+export const addShippingAddress = async (data: AddShippingAddressSchema) => {
   // Validade datas
   const parsed = addShippingAddressSchema.parse(data);
 
@@ -23,8 +27,17 @@ export const addShippingAddress = async (data: unknown) => {
   }
 
   // Insert datas in database in table.
-  await db.insert(shippingAddressTable).values({
-    ...parsed,
-    userId: session.user.id,
-  });
+  const [address] = await db
+    .insert(shippingAddressTable)
+    .values({
+      ...parsed,
+      userId: session.user.id,
+    })
+    .returning();
+
+  if (!address) {
+    throw new Error("Erro ao inserir endereço.");
+  }
+
+  return address;
 };
