@@ -44,6 +44,7 @@ import { shippingAddressTable } from "@/db/schema";
 
 // Query
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 // Zod schema basead in shippingAddressTable
 export const addressFormSchema = z.object({
@@ -69,6 +70,7 @@ interface AddressProps {
 }
 
 const Addresses = ({ addressUser, currentAddressId }: AddressProps) => {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const [selectedAddress, setSelectedAddress] =
@@ -150,6 +152,7 @@ const Addresses = ({ addressUser, currentAddressId }: AddressProps) => {
 
     try {
       toast.success("Botão de pagamento chamado com sucesso.");
+      router.push("/cart/confirmation");
     } catch (error) {
       toast.error("Erro ao renderizar o pagamento, Tente novamente!");
     }
@@ -167,7 +170,10 @@ const Addresses = ({ addressUser, currentAddressId }: AddressProps) => {
           onValueChange={handleAddressChange}
         >
           {addressUser.map((address) => (
-            <div key={address.id} className="flex items-center space-x-2">
+            <div
+              key={address.id}
+              className="flex items-center space-x-2 rounded-2xl border p-6"
+            >
               <RadioGroupItem value={address.id} id={address.id} />
               <Label htmlFor={address.id}>
                 {address.recipientName}, {address.street}, {address.number} -{" "}
@@ -176,7 +182,7 @@ const Addresses = ({ addressUser, currentAddressId }: AddressProps) => {
             </div>
           ))}
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 rounded-2xl border p-6">
             <RadioGroupItem value="add_new_address" id="add_new_address" />
             <Label htmlFor="add_new_address">Adicionar novo endereço.</Label>
           </div>
