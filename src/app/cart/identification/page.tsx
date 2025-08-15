@@ -16,6 +16,8 @@ import { auth } from "../../../lib/auth";
 // Next
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { DELIVERY_FEES } from "@/constants/index";
+import CartSummary from "./components/cart-summary";
 
 const IdentificationPage = async () => {
   // Get user session
@@ -31,13 +33,24 @@ const IdentificationPage = async () => {
   const cart = await db.query.cartTable.findFirst({
     where: (cartItem, { eq }) => eq(cartItem.userId, session.user.id),
     with: {
-      items: true,
+      items: {
+        with: {
+          productVariant: true,
+        },
+      },
     },
   });
 
   if (!cart || cart.items.length === 0) {
     redirect("/");
   }
+
+  // Get values of all products in cart and fees.
+  const totalPriceInCents = cart?.items.reduce((acc, item) => {
+    return acc + item.quantity * item.productVariant.priceInCents;
+  }, DELIVERY_FEES);
+
+  const subTotalPriceInCent = totalPriceInCents - DELIVERY_FEES;
 
   // Fetch data cart user logged.
   const [cartAddress] = await db
@@ -57,17 +70,22 @@ const IdentificationPage = async () => {
   return (
     <div className="h-full">
       <Header />
+      <div className="space-y-4">
+        <div className="space-y-6 px-5">
+          <Addresses
+            addressUser={addressUser}
+            currentAddressId={cartAddress.shippingAddressId}
+          />
 
-      <div className="px-5">
-        <Addresses
-          addressUser={addressUser}
-          currentAddressId={cartAddress.shippingAddressId}
-        />
+          <CartSummary
+            subTotalInCents={subTotalPriceInCent}
+            totalInCents={totalPriceInCents}
+            products={cart.items}
+          />
+        </div>
+
+        <Footer />
       </div>
-
-      <div className="px-5"></div>
-
-      <Footer />
     </div>
   );
 };
