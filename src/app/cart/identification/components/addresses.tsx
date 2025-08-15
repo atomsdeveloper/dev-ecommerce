@@ -66,15 +66,20 @@ type AddressFormData = z.infer<typeof addressFormSchema>;
 
 interface AddressProps {
   addressUser: (typeof shippingAddressTable.$inferSelect)[];
-  currentAddressId: string;
+  currentAddressId: string | null;
 }
 
 const Addresses = ({ addressUser, currentAddressId }: AddressProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const [selectedAddress, setSelectedAddress] =
-    useState<string>(currentAddressId);
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(() => {
+    if (currentAddressId === null) {
+      return "add_new_address";
+    }
+
+    return currentAddressId;
+  });
 
   // Mutate action from set address cart current
   const { mutate: SetAddress, isPending: isPendingSetAddress } = useMutation({
@@ -166,7 +171,7 @@ const Addresses = ({ addressUser, currentAddressId }: AddressProps) => {
       <CardContent className="space-y-6">
         <RadioGroup
           className=""
-          value={selectedAddress ?? "add_new_address"}
+          value={selectedAddress}
           onValueChange={handleAddressChange}
         >
           {addressUser.map((address) => (

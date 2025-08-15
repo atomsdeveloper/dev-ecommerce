@@ -58,10 +58,6 @@ const IdentificationPage = async () => {
     .from(cartTable)
     .where(eq(cartTable.userId, session.user.id));
 
-  if (!cartAddress.shippingAddressId) {
-    redirect("/");
-  }
-
   // Fetch data all address of user logged.
   const addressUser = await db.query.shippingAddressTable.findMany({
     where: eq(shippingAddressTable.userId, session.user.id),
@@ -74,7 +70,7 @@ const IdentificationPage = async () => {
         <div className="space-y-6 px-5">
           <Addresses
             addressUser={addressUser}
-            currentAddressId={cartAddress.shippingAddressId}
+            currentAddressId={cartAddress?.shippingAddressId}
           />
 
           <CartSummary
