@@ -1,5 +1,7 @@
 "use server";
 
+import { DELIVERY_FEES } from "@/constants/index";
+
 // Database
 import { db } from "@/db";
 import { cartTable } from "@/db/schema";
@@ -40,8 +42,6 @@ export const getCart = async () => {
     },
   });
 
-  const deleveryFees: number = 989;
-
   // If not cart found create one to user logged-in user and return it with empty items.
   if (!cart) {
     const [newCart] = await db
@@ -53,7 +53,7 @@ export const getCart = async () => {
       ...newCart,
       items: [],
       totalPriceInCents: 0,
-      deleveryFees,
+      DELIVERY_FEES,
     };
   }
 
@@ -61,7 +61,7 @@ export const getCart = async () => {
     ...cart,
     totalPriceInCents: cart?.items.reduce((acc, item) => {
       return acc + item.quantity * item.productVariant.priceInCents;
-    }, deleveryFees),
-    deleveryFees,
+    }, DELIVERY_FEES),
+    DELIVERY_FEES,
   };
 };
