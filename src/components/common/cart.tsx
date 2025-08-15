@@ -1,3 +1,5 @@
+"use client";
+
 // Icons
 import { LoaderCircleIcon, ShoppingBasketIcon } from "lucide-react";
 
@@ -28,15 +30,22 @@ import { formatCentsToBRL } from "@/helpers/money";
 // Next
 import Link from "next/link";
 
+// Constants
+import { DELIVERY_FEES } from "@/constants";
+import { useState } from "react";
+
 const Cart = () => {
+  const [sheetOpen, setSheetOpen] = useState<boolean>(false);
+
   // Query for fetch datas in database in client side.
   const { data: cart, isPending: cartIsLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: () => getCart(),
+    enabled: sheetOpen,
   });
 
   return (
-    <Sheet>
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon">
           <ShoppingBasketIcon />
@@ -96,7 +105,7 @@ const Cart = () => {
               <div className="flex items-center justify-between text-xs font-medium">
                 <p>Taxa</p>
                 <p className="text-md font-semibold text-green-500">
-                  {formatCentsToBRL(cart?.deleveryFees)}
+                  {formatCentsToBRL(DELIVERY_FEES)}
                 </p>
               </div>
               <Separator />
@@ -104,13 +113,13 @@ const Cart = () => {
                 <p>Total</p>
                 <p>
                   {formatCentsToBRL(
-                    (cart?.totalPriceInCents ?? 0) + (cart?.deleveryFees ?? 0),
+                    (cart?.totalPriceInCents ?? 0) + DELIVERY_FEES,
                   )}
                 </p>
               </div>
 
               <Button asChild className="mt-5 rounded-full">
-                <Link href="/cart/identification">Finalizar compra</Link>
+                <Link href="/cart/confirmation">Finalizar compra</Link>
               </Button>
             </div>
           )}

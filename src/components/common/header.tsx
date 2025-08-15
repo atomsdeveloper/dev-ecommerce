@@ -103,7 +103,8 @@ const Header = () => {
           </div>
         </SheetContent>
       </Sheet>
-      <Cart />
+
+      {session?.user && <Cart />}
     </header>
   );
 };
