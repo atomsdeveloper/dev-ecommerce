@@ -97,7 +97,7 @@ export const finishOrder = async () => {
     );
 
     // Delete cart and cart item on created order and order items.
-    tx.delete(cartItemTable).where(eq(cartItemTable.id, cart.id));
     tx.delete(cartTable).where(eq(cartTable.id, cart.id));
+    tx.delete(cartItemTable).where(eq(cartItemTable.id, cart.id));
   });
 };

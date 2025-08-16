@@ -250,8 +250,8 @@ export const orderTable = pgTable("order", {
   phone: text().notNull(),
   email: text().notNull(),
   cpfOrCnpj: text("cpf_or_cnpj").notNull(),
-  totalPriceInCents: integer("total_price_ic_cents").notNull(),
-  totalFeesInCents: integer("total_price_ic_cents").notNull(),
+  totalPriceInCents: integer("total_price_in_cents").notNull(),
+  totalFeesInCents: integer("total_fees_in_cents").notNull(),
   status: statusOrder().notNull().default("pending"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
