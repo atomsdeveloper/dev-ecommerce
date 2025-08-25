@@ -60,6 +60,7 @@ export const finishOrder = async () => {
     const [order] = await tx
       .insert(orderTable)
       .values({
+        shippingAddressId: cart.shippingAddressId,
         recipientName: cart.shippingAddress.recipientName,
         street: cart.shippingAddress.street,
         number: cart.shippingAddress.number,
