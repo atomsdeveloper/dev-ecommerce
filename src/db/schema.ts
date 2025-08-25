@@ -9,6 +9,30 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+export const roleUserDashboard = pgEnum("role_user_dash", [
+  "OWNER",
+  "ADMIN",
+  "READ",
+]);
+
+export const statusUserDashboard = pgEnum("status_user_dash", ["ON", "OFF"]);
+
+// USER DASH
+export const userDashboardTable = pgTable("user", {
+  id: text("id").primaryKey(),
+  role: roleUserDashboard().notNull().default("READ"),
+  status: statusUserDashboard().notNull().default("ON"),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  image: text("image"),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
 // USER
 export const userTable = pgTable("user", {
   id: text("id").primaryKey(),
