@@ -19,9 +19,9 @@
   // VsCode settings for better management folders, file and texts code.
   "window.zoomLevel": 0,
   "breadcrumbs.enabled": true,
-  "editor.fontSize": 11.3,
-  "debug.console.fontSize": 11.3,
-  "terminal.integrated.fontSize": 11.3,
+  "editor.fontSize": 10.5,
+  "debug.console.fontSize": 10.5,
+  "terminal.integrated.fontSize": 10.5,
   "editor.glyphMargin": false,
   "workbench.activityBar.location": "default",
   "editor.lineNumbers": "on",
